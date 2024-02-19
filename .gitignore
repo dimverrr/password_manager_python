@@ -1,0 +1,5 @@
+*.env
+*.json
+__pycache__/
+db.sqlite3
+/password_manager/migrations
