@@ -10,6 +10,7 @@ from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from django.core.exceptions import ObjectDoesNotExist
+from .utils import encrypt, decrypt
 
 
 @api_view(["POST"])
@@ -64,7 +65,7 @@ def add_credentials(request):
                 user=user_id,
                 defaults={
                     "login": request.data["login"],
-                    "password": request.data["password"],
+                    "password": encrypt(request.data["password"].encode("utf-8")),
                 },
             )
             if created:
@@ -92,7 +93,7 @@ def update_credential(request, credential_name):
         ).update(
             credential_name=request.data["credential_name"],
             login=request.data["login"],
-            password=request.data["password"],
+            password=encrypt(request.data["password"].encode("utf-8")),
         )
         if not updated:
             return Response(
@@ -138,7 +139,11 @@ def get_one_credentials(request, credential_name):
             status=status.HTTP_404_NOT_FOUND,
         )
     serializer = CredentialSerializer(creds)
-    return Response({"creds": serializer.data}, status=status.HTTP_200_OK)
+    decrypted_password = decrypt(eval(serializer.data["password"]))
+    return Response(
+        {"creds": {"login": serializer.data["login"], "password": decrypted_password}},
+        status=status.HTTP_200_OK,
+    )
 
 
 @api_view(["GET"])
@@ -153,4 +158,16 @@ def get_all_credentials(request):
             status=status.HTTP_404_NOT_FOUND,
         )
     serializer = CredentialSerializer(creds, many=True)
-    return Response({"creds": serializer.data}, status=status.HTTP_200_OK)
+    return Response(
+        {
+            "creds": [
+                {
+                    "credential_name": creds["credential_name"],
+                    "login": creds["login"],
+                    "password": decrypt(eval(creds["password"])),
+                }
+                for creds in serializer.data
+            ]
+        },
+        status=status.HTTP_200_OK,
+    )

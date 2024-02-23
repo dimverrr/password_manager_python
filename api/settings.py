@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "rest_framework.authtoken",
+    "drf_yasg",
 ]
 
 MIDDLEWARE = [
@@ -130,3 +131,5 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.TokenAuthentication",  # Add this line
     ],
 }
+
+SWAGGER_SETTINGS = {"SECURITY_DEFINITIONS": {"Basic": {"type": "basic"}}}
