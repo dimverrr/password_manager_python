@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "drf_yasg",
+    "rest_framework_swagger",
 ]
 
 MIDDLEWARE = [
@@ -132,4 +133,13 @@ REST_FRAMEWORK = {
     ],
 }
 
-SWAGGER_SETTINGS = {"SECURITY_DEFINITIONS": {"Basic": {"type": "basic"}}}
+SWAGGER_SETTINGS = {
+    "USE_SESSION_AUTH": False,  # Set this to True if you're using session authentication
+    "SECURITY_DEFINITIONS": {
+        "Bearer": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+        },
+    },
+}

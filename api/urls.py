@@ -19,22 +19,22 @@ from django.urls import path, include
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+import password_manager.views
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="My API",
+        title="Password Manager",
         default_version="v1",
-        description="My API description",
-        terms_of_service="https://www.example.com/terms/",
-        contact=openapi.Contact(email="contact@example.com"),
-        license=openapi.License(name="Awesome License"),
+        description="Password Manager",
+        contact=openapi.Contact(email="dimverrr@gmail.com"),
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
 )
 
 urlpatterns = [
-    path("api/", include("password_manager.urls")),
+    path("", password_manager.views.index, name="index"),
+    path("", include("password_manager.urls")),
     path("admin", admin.site.urls),
     path(
         "swagger/",

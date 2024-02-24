@@ -20,5 +20,5 @@ def decrypt(password):
 
     key = os.getenv("SECRET_KEY")
     f = Fernet(key=key)
-    decrypted_password = f.decrypt(password)
+    decrypted_password = f.decrypt(eval(password))
     return decrypted_password

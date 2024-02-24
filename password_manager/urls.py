@@ -5,25 +5,24 @@ from . import views
 schema_view = get_swagger_view(title="Pastebin API")
 
 urlpatterns = [
-    path("", views.index, name="index"),
-    path("credentials/new", views.add_credentials, name="add-credentials"),
+    path("api/", views.index, name="index"),
+    path("api/credentials/new", views.add_credentials, name="add-credentials"),
     path(
-        "credentials/<str:credential_name>/update",
+        "api/credentials/<str:credential_name>/update",
         views.update_credential,
         name="update-credentials",
     ),
     path(
-        "credentials/<str:credential_name>/delete",
+        "api/credentials/<str:credential_name>/delete",
         views.delete_credentials,
         name="delete-credentials",
     ),
     path(
-        "credentials/<str:credential_name>",
+        "api/credentials/<str:credential_name>",
         views.get_one_credentials,
         name="one-user-credentials",
     ),
-    path("credentials/", views.get_all_credentials, name="all-user-credentials"),
-    path("login", views.login, name="login"),
-    path("signup", views.signup, name="signup"),
-    path("test_token", views.test_token),
+    path("api/credentials/", views.get_all_credentials, name="all-user-credentials"),
+    path("api/login", views.login, name="login"),
+    path("api/signup", views.signup, name="signup"),
 ]

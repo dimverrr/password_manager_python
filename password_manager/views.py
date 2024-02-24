@@ -11,8 +11,14 @@ from rest_framework.authentication import SessionAuthentication, TokenAuthentica
 from rest_framework.permissions import IsAuthenticated
 from django.core.exceptions import ObjectDoesNotExist
 from .utils import encrypt, decrypt
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 
+@swagger_auto_schema(
+    method="post",
+    request_body=UserSerializer,
+)
 @api_view(["POST"])
 def signup(request):
     serializer = UserSerializer(data=request.data)
@@ -29,29 +35,38 @@ def signup(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+@swagger_auto_schema(
+    method="post",
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            "username": openapi.Schema(type=openapi.TYPE_STRING, description="Login"),
+            "password": openapi.Schema(
+                type=openapi.TYPE_STRING, description="Password"
+            ),
+        },
+    ),
+    responses={200: "Success", 404: "Not found"},
+)
 @api_view(["POST"])
 def login(request):
     user = get_object_or_404(User, username=request.data["username"])
     if not user.check_password(request.data["password"]):
         return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
     token, created = Token.objects.get_or_create(user=user)
-    serializer = UserSerializer(instance=user)
-    return Response({"token": token.key, "user": serializer.data})
+    return Response({"token": token.key})
 
 
 @api_view(["GET"])
-@authentication_classes([SessionAuthentication, TokenAuthentication])
-@permission_classes([IsAuthenticated])
-def test_token(request):
-    return Response({"Passed for {}".format(request.user.username)})
-
-
 def index(request):
-    return Response(
-        {"Hello, world. You're at the polls index."}, status=status.HTTP_200_OK
-    )
+    return Response({"Hello, world."}, status=status.HTTP_200_OK)
 
 
+@swagger_auto_schema(
+    method="post",
+    request_body=CredentialSerializer,
+    operation_description="Create new credential object",
+)
 @api_view(["POST"])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -81,6 +96,11 @@ def add_credentials(request):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+@swagger_auto_schema(
+    method="put",
+    request_body=CredentialSerializer,
+    operation_description="Update credential object by credential name",
+)
 @api_view(["PUT"])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -106,6 +126,10 @@ def update_credential(request, credential_name):
         )
 
 
+@swagger_auto_schema(
+    method="delete",
+    operation_description="Delete credential object by credential name",
+)
 @api_view(["DELETE"])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -125,6 +149,10 @@ def delete_credentials(request, credential_name):
     )
 
 
+@swagger_auto_schema(
+    method="get",
+    operation_description="Get credential object by credential name",
+)
 @api_view(["GET"])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -139,13 +167,17 @@ def get_one_credentials(request, credential_name):
             status=status.HTTP_404_NOT_FOUND,
         )
     serializer = CredentialSerializer(creds)
-    decrypted_password = decrypt(eval(serializer.data["password"]))
+    decrypted_password = decrypt(serializer.data["password"])
     return Response(
         {"creds": {"login": serializer.data["login"], "password": decrypted_password}},
         status=status.HTTP_200_OK,
     )
 
 
+@swagger_auto_schema(
+    method="get",
+    operation_description="Get all user credential objects",
+)
 @api_view(["GET"])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -164,7 +196,7 @@ def get_all_credentials(request):
                 {
                     "credential_name": creds["credential_name"],
                     "login": creds["login"],
-                    "password": decrypt(eval(creds["password"])),
+                    "password": decrypt(creds["password"]),
                 }
                 for creds in serializer.data
             ]
