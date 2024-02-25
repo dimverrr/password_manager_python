@@ -7,7 +7,7 @@ class Credential(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     credential_name = models.CharField(max_length=50)
     login = models.CharField(max_length=50)
-    password = models.CharField(max_length=50)
+    password = models.CharField(max_length=250)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
@@ -16,6 +16,3 @@ class Credential(models.Model):
                 fields=["credential_name", "user"], name="name of constraint"
             )
         ]
-
-    def __str__(self) -> str:
-        return self.credential_name

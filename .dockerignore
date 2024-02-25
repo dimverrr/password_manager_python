@@ -1,0 +1,6 @@
+.gitignore
+.env.example
+.flake8
+.pre-commit-config.yaml
+README.md
+/password_manager/migrations
