@@ -6,7 +6,7 @@ schema_view = get_swagger_view(title="Pastebin API")
 
 urlpatterns = [
     path("api/", views.index, name="index"),
-    path("api/credentials/new", views.add_credentials, name="add-credentials"),
+    path("api/credentials/new", views.add_credentials, name="create-credentials"),
     path(
         "api/credentials/<str:credential_name>/update",
         views.update_credential,
@@ -20,9 +20,11 @@ urlpatterns = [
     path(
         "api/credentials/<str:credential_name>",
         views.get_one_credentials,
-        name="one-user-credentials",
+        name="get-one-user-credentials",
     ),
-    path("api/credentials/", views.get_all_credentials, name="all-user-credentials"),
+    path(
+        "api/credentials/", views.get_all_credentials, name="get-all-user-credentials"
+    ),
     path("api/login", views.login, name="login"),
     path("api/signup", views.signup, name="signup"),
 ]

@@ -29,7 +29,7 @@ def signup(request):
         user.save()
         token = Token.objects.create(user=user)
         return Response(
-            {"token": token.key, "user": serializer.data},
+            {"token": token.key, "user_id": serializer.data["id"]},
             status=status.HTTP_201_CREATED,
         )
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -55,7 +55,10 @@ def login(request):
         return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
     token, created = Token.objects.get_or_create(user=user)
     serializer = UserSerializer(user)
-    return Response({"token": token.key, "user": serializer.data})
+    return Response(
+        {"token": token.key, "user_id": serializer.data["id"]},
+        status=status.HTTP_200_OK,
+    )
 
 
 @api_view(["GET"])
@@ -81,7 +84,7 @@ def add_credentials(request):
                 user=user_id,
                 defaults={
                     "login": request.data["login"],
-                    "password": encrypt(request.data["password"].encode("utf-8")),
+                    "password": encrypt(request.data["password"]),
                 },
             )
             if created:
@@ -146,7 +149,7 @@ def delete_credentials(request, credential_name):
         )
     return Response(
         {"Credential {} were deleted successfully".format(credential_name)},
-        status=status.HTTP_200_OK,
+        status=status.HTTP_204_NO_CONTENT,
     )
 
 
