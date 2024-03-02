@@ -23,7 +23,8 @@ Password Manager allows you to create and store your users and credentials in Do
 ```
 
 ## Swagger
-http://{your_host}:{your_port}/swagger/
+http://127.0.0.1:8000/swagger/
+To login in Swagger click "Authorize" button and enter your token as on photo
 
 ## Postman
 
