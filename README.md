@@ -18,7 +18,8 @@ Password Manager allows you to create and store your users and credentials in Do
   docker-compose up -d --build
 ```
 3. Then run these commands
-`` python
+   
+``` python
     docker-compose exec web python manage.py makemigrations
 ```
 
