@@ -30,7 +30,7 @@ Password Manager allows you to create and store your users and credentials in Do
 Default URL - http://127.0.0.1:8000/swagger/
 
 To login in Swagger click "Authorize" button and enter your token as on screenshot:
-![image](https://github.com/dimverrr/password_manager_python/blob/main/2024-03-02_11-41.png)
+![image](https://github.com/dimverrr/password_manager_python/assets/118119126/bbdf4ed3-2da8-4b71-ba2e-a5fbe1c185b2)
 
 ## Postman
 
