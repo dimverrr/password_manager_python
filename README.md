@@ -28,7 +28,8 @@ Password Manager allows you to create and store your users and credentials in Do
 
 ## Swagger
 http://127.0.0.1:8000/swagger/
-To login in Swagger click "Authorize" button and enter your token as on photo
+To login in Swagger click "Authorize" button and enter your token as on screenshot:
+https://github.com/dimverrr/password_manager_python/blob/main/2024-03-02_11-41.png
 
 ## Postman
 
